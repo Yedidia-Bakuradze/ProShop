@@ -1,7 +1,7 @@
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import { Container } from "react-bootstrap";
-import HomeScreen from "./screens/HomeScreen";
+import { Outlet } from "react-router-dom";
 const App = () => {
   return (
     <>
@@ -9,7 +9,7 @@ const App = () => {
       <main className="py-3">
         <Container>
           {/* <h1>Welcome To ProShop</h1> */}
-          <HomeScreen />
+          <Outlet />
         </Container>
       </main>
       <Footer />
