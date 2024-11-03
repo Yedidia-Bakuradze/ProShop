@@ -1,5 +1,6 @@
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
+import logo from "../assets/logo.png";
 const Header = () => {
   return (
     <header>
@@ -7,7 +8,10 @@ const Header = () => {
       <Navbar bg="dark" variant="dark" expand="md" collapseOnSelect>
         <Container>
           {/* Barnd - The company title to navigate to the home site*/}
-          <Navbar.Brand href="/">ProShop</Navbar.Brand>
+          <Navbar.Brand href="/">
+            <img src={logo} alt="ProShop" />
+            ProShop
+          </Navbar.Brand>
           {/* Toggle - dropdown menu managed by the Collapse component */}
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
