@@ -8,5 +8,8 @@
     "start": "node backend/server.js"
   },
   "author": "Yedidia Bakuradze",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.1"
+  }
 }
