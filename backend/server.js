@@ -1,6 +1,8 @@
 import express from "express";
 import products from "./data/products.js";
-const port = 5000; //port 3000 is used by the frontend
+import dotenv from "dotenv";
+dotenv.config();
+const port = process.env.PORT || 5000; //port 3000 is used by the frontend
 
 const app = express();
 
