@@ -2,10 +2,10 @@
   "name": "proshop",
   "version": "1.0.0",
   "description": "eCommerce application built with the MERN stack",
-  "type":"module",
+  "type": "module",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node backend/server.js"
   },
   "author": "Yedidia Bakuradze",
   "license": "MIT"
