@@ -13,7 +13,8 @@
   "author": "Yedidia Bakuradze",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.21.1"
+    "express": "^4.21.1",
+    "mongoose": "^8.8.0"
   },
   "devDependencies": {
     "concurrently": "^9.0.1",
