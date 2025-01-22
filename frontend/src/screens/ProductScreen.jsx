@@ -1,19 +1,41 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Image, ListGroup, Card, Button } from 'react-bootstrap';
+import {
+    Row,
+    Col,
+    Image,
+    ListGroup,
+    Card,
+    Button,
+    ListGroupItem,
+    FormControl
+} from 'react-bootstrap';
 import Rating from '../components/Rating';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import { useGetProductDetailsQuery } from '../slices/productsApiSlice';
+import { addToCart } from '../slices/cartSlice.js';
+import { useDispatch } from 'react-redux';
 
 const ProductScreen = () => {
     const { id: productId } = useParams();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const [qty, setQty] = useState(1);
 
     const {
         data: product,
         isLoading,
         error
     } = useGetProductDetailsQuery(productId);
+
+    const addToCartHandler = () => {
+        dispatch(addToCart({ ...product, qty }));
+        navigate('/cart');
+    };
+
     return (
         <>
             <Link className="btn btn-light my-3" to="/">
@@ -86,11 +108,46 @@ const ProductScreen = () => {
                                             </Col>
                                         </Row>
                                     </ListGroup.Item>
+                                    {product.countInStock > 0 && (
+                                        <ListGroup.Item>
+                                            <Row>
+                                                <Col>Qty</Col>
+                                                <Col>
+                                                    <FormControl
+                                                        as="select"
+                                                        value={qty}
+                                                        onChange={(e) =>
+                                                            setQty(
+                                                                Number(
+                                                                    e.target
+                                                                        .value
+                                                                )
+                                                            )
+                                                        }
+                                                    >
+                                                        {[
+                                                            ...Array(
+                                                                product.countInStock
+                                                            ).keys()
+                                                        ].map((x) => (
+                                                            <option
+                                                                key={x + 1}
+                                                                value={x + 1}
+                                                            >
+                                                                {x + 1}
+                                                            </option>
+                                                        ))}
+                                                    </FormControl>
+                                                </Col>
+                                            </Row>
+                                        </ListGroup.Item>
+                                    )}
 
                                     <ListGroup.Item>
                                         <Button
                                             className="btn-block"
                                             type="button"
+                                            onClick={addToCartHandler}
                                             disabled={
                                                 product.countInStock === 0
                                             }

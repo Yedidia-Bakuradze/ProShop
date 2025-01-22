@@ -28,7 +28,7 @@ const cartSlice = createSlice({
 
             //Calculate the cart price
             state.itemsPrice = addDecimals(
-                state.cartItems.reducer(
+                state.cartItems.reduce(
                     (acc, item) => acc + item.price * item.qty,
                     0
                 )
