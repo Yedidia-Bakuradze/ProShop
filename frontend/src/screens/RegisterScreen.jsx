@@ -4,20 +4,22 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/Loader';
-import { useLoginMutation } from '../slices/usersApiSlice';
+import { useRegisterMutation } from '../slices/usersApiSlice';
 import { setCredentials } from '../slices/authSlice';
 import { toast } from 'react-toastify';
 import FormContatiner from '../components/FormContatiner';
 
-const LoginScreen = () => {
+const RegisterScreen = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [name, setName] = useState('');
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     //Retrive user's data if there is any in the local storgae
-    const [login, { isLoading }] = useLoginMutation();
+    const [register, { isLoading }] = useRegisterMutation();
     const { userInfo } = useSelector((state) => state.auth);
 
     //Check if there is any redirection to other page
@@ -34,20 +36,33 @@ const LoginScreen = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-
-        try {
-            const res = await login({ email, password }).unwrap(); //The unwrap would extract the data from the Promise
-            dispatch(setCredentials({ ...res }));
-            navigate(redirect);
-        } catch (err) {
-            toast.error(err?.data?.message || err.error);
+        if (password !== confirmPassword) {
+            toast.error('Passwords dont match');
+        } else {
+            try {
+                const res = await register({ name, email, password }).unwrap(); //The unwrap would extract the data from the Promise
+                dispatch(setCredentials({ ...res }));
+                navigate(redirect);
+            } catch (err) {
+                console.log(err.data);
+                toast.error(err?.data?.message || err.error);
+            }
         }
     };
 
     return (
         <FormContatiner>
-            <h1>Sign In</h1>
+            <h1>Sign Up</h1>
             <Form onSubmit={submitHandler}>
+                <Form.Group controlId="name" className="my-3">
+                    <Form.Label>Name</Form.Label>
+                    <Form.Control
+                        type="text"
+                        placeholder="Enter your name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                    ></Form.Control>
+                </Form.Group>
                 <Form.Group controlId="email" className="my-3">
                     <Form.Label>Email Address</Form.Label>
                     <Form.Control
@@ -68,27 +83,33 @@ const LoginScreen = () => {
                     ></Form.Control>
                 </Form.Group>
 
+                <Form.Group controlId="confirmPassword" className="my-3">
+                    <Form.Label>Confirm Password</Form.Label>
+                    <Form.Control
+                        type="password"
+                        placeholder="Confirm Password "
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                    ></Form.Control>
+                </Form.Group>
+
                 <Button
                     type="submit"
                     variant="primary"
                     className="mt-2"
                     disabled={isLoading}
                 >
-                    Sign In
+                    Join Now
                 </Button>
                 {isLoading && <Loader />}
             </Form>
             <Row className="py-3">
                 <Col>
-                    New Customer?{' '}
+                    Already have an account?{' '}
                     <Link
-                        to={
-                            redirect
-                                ? `/register?redirect=${redirect}`
-                                : `/register`
-                        }
+                        to={redirect ? `/login?redirect=${redirect}` : `/login`}
                     >
-                        Register Now
+                        Login
                     </Link>
                 </Col>
             </Row>
@@ -96,4 +117,4 @@ const LoginScreen = () => {
     );
 };
 
-export default LoginScreen;
+export default RegisterScreen;
