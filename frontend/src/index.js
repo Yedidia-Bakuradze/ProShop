@@ -14,6 +14,8 @@ import './assets/styles/index.css';
 import App from './App';
 import PrivateRoute from './components/PrivateRoute.jsx';
 
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+
 import HomeScreen from './screens/HomeScreen';
 import ProductScreen from './screens/ProductScreen';
 import CartScreen from './screens/CartScreen.jsx';
@@ -49,7 +51,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
         <Provider store={store}>
-            <RouterProvider router={router} />
+            <PayPalScriptProvider deferLoading={true}>
+                <RouterProvider router={router} />
+            </PayPalScriptProvider>
         </Provider>
     </React.StrictMode>
 );
