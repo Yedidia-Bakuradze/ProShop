@@ -4,7 +4,7 @@ import { updateCart } from '../untils/cartUtils';
 //Load existing data of cart, if not exsiting - initiate an empty array in cartItems
 const initialState = localStorage.getItem('cart')
     ? JSON.parse(localStorage.getItem('cart'))
-    : { cartItems: [] };
+    : { cartItems: [], shippingAddress: {}, paymentMethod: 'PayPal' };
 
 const cartSlice = createSlice({
     name: 'cart',
@@ -27,9 +27,15 @@ const cartSlice = createSlice({
                 (item) => item._id !== action.payload
             );
             return updateCart(state);
+        },
+        //Reducer for modifing the shipping address
+        saveShippingAddress: (state, action) => {
+            state.shippingAddress = action.payload;
+            return updateCart(state);
         }
     } //The action that would be made and effect the state
 });
 
-export const { addToCart, removeFromCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, saveShippingAddress } =
+    cartSlice.actions;
 export default cartSlice.reducer;
