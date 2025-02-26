@@ -11,7 +11,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLoginMutation, useLogoutMutation } from '../slices/usersApiSlice';
 import { logout } from '../slices/authSlice';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import logo from '../assets/logo.png';
 
@@ -87,6 +87,16 @@ const Header = () => {
                                         <FaUser /> Sign In
                                     </Nav.Link>
                                 </LinkContainer>
+                            )}
+
+                            {userInfo.isAdmin && (
+                                <NavDropdown title="Admin">
+                                    <LinkContainer to="/admin/orderlist">
+                                        <NavDropdown.Item>
+                                            Orders
+                                        </NavDropdown.Item>
+                                    </LinkContainer>
+                                </NavDropdown>
                             )}
                         </Nav>
                     </Navbar.Collapse>
