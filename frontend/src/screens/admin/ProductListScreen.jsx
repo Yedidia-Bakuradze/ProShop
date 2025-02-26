@@ -1,15 +1,33 @@
-import { FaTimes, FaEdit, FaTrash } from 'react-icons/fa';
-import { Button, Table, Row, Col, Fade } from 'react-bootstrap';
+import { FaEdit, FaTrash } from 'react-icons/fa';
+import { Button, Table, Row, Col } from 'react-bootstrap';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
 import { LinkContainer } from 'react-router-bootstrap';
-import { useGetProductsQuery } from '../../slices/productsApiSlice';
+import {
+    useGetProductsQuery,
+    useCreateProductMutation
+} from '../../slices/productsApiSlice';
+import { toast } from 'react-toastify';
 
 const ProductListScreen = () => {
-    const { data: products, isLoading, error } = useGetProductsQuery();
+    const { data: products, isLoading, error, refetch } = useGetProductsQuery();
 
+    const [createProduct, { isLoading: loadingCreateProduct }] =
+        useCreateProductMutation();
     const deleteHanlder = (productId) => {
         console.log('del', productId);
+    };
+
+    const createProductHandler = async () => {
+        if (window.confirm('Adding new empty product, Are you sure?')) {
+            try {
+                await createProduct();
+                refetch();
+                toast.success('New product was added');
+            } catch (err) {
+                toast.error(err?.data?.message || err.error);
+            }
+        }
     };
 
     return (
@@ -19,11 +37,16 @@ const ProductListScreen = () => {
                     <h1>Products</h1>
                 </Col>
                 <Col className="text-end">
-                    <Button className="btn-sm m-3">
+                    <Button
+                        className="btn-sm m-3"
+                        onClick={createProductHandler}
+                    >
                         <FaEdit /> Add new product
                     </Button>
                 </Col>
             </Row>
+
+            {loadingCreateProduct && <Loader />}
 
             {isLoading ? (
                 <Loader />
