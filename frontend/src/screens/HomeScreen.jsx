@@ -1,4 +1,4 @@
-import { Row, Col, Pagination } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import Product from '../components/Product';
 import { useGetProductsQuery } from '../slices/productsApiSlice';

@@ -1,4 +1,5 @@
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import { useParams } from 'react-router-dom';
 import { Button, Table, Row, Col } from 'react-bootstrap';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
@@ -9,9 +10,13 @@ import {
     useDeleteProductMutation
 } from '../../slices/productsApiSlice';
 import { toast } from 'react-toastify';
+import Paginate from '../../components/Paginate';
 
 const ProductListScreen = () => {
-    const { data: products, isLoading, error, refetch } = useGetProductsQuery();
+    const { pageNumber } = useParams();
+    const { data, isLoading, error, refetch } = useGetProductsQuery({
+        pageNumber
+    });
 
     const [createProduct, { isLoading: loadingCreateProduct }] =
         useCreateProductMutation();
@@ -67,54 +72,63 @@ const ProductListScreen = () => {
             ) : error ? (
                 <Message variant="danger">{error}</Message>
             ) : (
-                <Table striped hover responsive>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Title</th>
-                            <th>Price</th>
-                            <th>In Stock</th>
-                            <th>Category</th>
-                            <th>Brand</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {products.map((product) => (
-                            <tr key={product._id}>
-                                <td>{product._id}</td>
-                                <td>{product.name}</td>
-                                <td>${product.price}</td>
-                                <td>{product.countInStock}</td>
-                                <td>{product.category}</td>
-                                <td>{product.brand}</td>
-                                <td>
-                                    <LinkContainer
-                                        to={`/admin/product/${product._id}/edit`}
-                                    >
+                <>
+                    <Table striped hover responsive>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Price</th>
+                                <th>In Stock</th>
+                                <th>Category</th>
+                                <th>Brand</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data.products.map((product) => (
+                                <tr key={product._id}>
+                                    <td>{product._id}</td>
+                                    <td>{product.name}</td>
+                                    <td>${product.price}</td>
+                                    <td>{product.countInStock}</td>
+                                    <td>{product.category}</td>
+                                    <td>{product.brand}</td>
+                                    <td>
+                                        <LinkContainer
+                                            to={`/admin/product/${product._id}/edit`}
+                                        >
+                                            <Button
+                                                type="button"
+                                                className="btn-sm mx-2"
+                                                variant="light"
+                                            >
+                                                <FaEdit />
+                                            </Button>
+                                        </LinkContainer>
                                         <Button
                                             type="button"
                                             className="btn-sm mx-2"
-                                            variant="light"
+                                            variant="danger"
+                                            onClick={() =>
+                                                deleteHanlder(product._id)
+                                            }
                                         >
-                                            <FaEdit />
+                                            <FaTrash
+                                                style={{ color: 'white' }}
+                                            />
                                         </Button>
-                                    </LinkContainer>
-                                    <Button
-                                        type="button"
-                                        className="btn-sm mx-2"
-                                        variant="danger"
-                                        onClick={() =>
-                                            deleteHanlder(product._id)
-                                        }
-                                    >
-                                        <FaTrash style={{ color: 'white' }} />
-                                    </Button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </Table>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                    <Paginate
+                        pages={data.pages}
+                        page={data.page}
+                        isAdmin={true}
+                    />
+                </>
             )}
         </>
     );
