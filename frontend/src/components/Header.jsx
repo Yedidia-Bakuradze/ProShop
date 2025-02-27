@@ -1,17 +1,10 @@
-import {
-    Badge,
-    Navbar,
-    Nav,
-    Container,
-    NavDropdown,
-    Toast
-} from 'react-bootstrap';
+import { Badge, Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import { FaShoppingCart, FaUser } from 'react-icons/fa';
 import { LinkContainer } from 'react-router-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
-import { useLoginMutation, useLogoutMutation } from '../slices/usersApiSlice';
+import { useLogoutMutation } from '../slices/usersApiSlice';
 import { logout } from '../slices/authSlice';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import logo from '../assets/logo.png';
 

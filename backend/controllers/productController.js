@@ -85,6 +85,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
 // @access	Private
 const createProductReview = asyncHandler(async (req, res) => {
     const { rating, comment } = req.body;
+    console.log('id', req.params.id);
     const product = await Product.findById(req.params.id);
 
     //Check if the product exists
