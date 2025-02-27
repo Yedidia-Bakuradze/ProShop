@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, uesParams, useParams } from 'react-router-dom';
-import { Form, Button, FormGroup } from 'react-bootstrap';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Form, Button } from 'react-bootstrap';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
 import FormContatiner from '../../components/FormContatiner';
@@ -25,7 +25,6 @@ const ProductEditScreen = () => {
     const {
         data: product,
         isLoading,
-        refetch,
         error
     } = useGetProductDetailsQuery(productId);
 
@@ -123,7 +122,7 @@ const ProductEditScreen = () => {
                             ></Form.Control>
                         </Form.Group>
 
-                        <Form.Group>
+                        <Form.Group controlId="image" className="my-2">
                             <Form.Label>Image</Form.Label>
                             <Form.Control
                                 type="text"
@@ -137,6 +136,7 @@ const ProductEditScreen = () => {
                                 onChange={uploadImageHandler}
                             ></Form.Control>
                         </Form.Group>
+                        {loadingProductImage && <Loader />}
 
                         <Form.Group controlId="brand" className="my-2">
                             <Form.Label>Brand</Form.Label>

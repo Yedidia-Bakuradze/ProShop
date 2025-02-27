@@ -1,4 +1,4 @@
-import { useState, useEffect, act } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Table, Form, Row, Col } from 'react-bootstrap';
 import { setCredentials } from '../slices/authSlice';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -54,130 +54,148 @@ const ProfileScreen = () => {
     };
 
     return (
-        <Row>
-            {/* Profile details */}
-            <Col md={3}>
-                <Form onSubmit={submitHandler}>
-                    {/* Name field */}
-                    <Form.Group controlId="name" className="my-2">
-                        <Form.Label>Name</Form.Label>
-                        <Form.Group>
-                            <Form.Control
-                                type="text"
-                                placeholder="Enter your name"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                            ></Form.Control>
+        <>
+            {loadingProfileUpdate && <Loader />}
+            <Row>
+                {/* Profile details */}
+                <Col md={3}>
+                    <Form onSubmit={submitHandler}>
+                        {/* Name field */}
+                        <Form.Group controlId="name" className="my-2">
+                            <Form.Label>Name</Form.Label>
+                            <Form.Group>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Enter your name"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                ></Form.Control>
+                            </Form.Group>
                         </Form.Group>
-                    </Form.Group>
 
-                    {/* Email field */}
-                    <Form.Group controlId="email" className="my-2">
-                        <Form.Label>Email</Form.Label>
-                        <Form.Group>
-                            <Form.Control
-                                type="text"
-                                placeholder="Enter your email address"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            ></Form.Control>
+                        {/* Email field */}
+                        <Form.Group controlId="email" className="my-2">
+                            <Form.Label>Email</Form.Label>
+                            <Form.Group>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Enter your email address"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                ></Form.Control>
+                            </Form.Group>
                         </Form.Group>
-                    </Form.Group>
 
-                    {/* Password field */}
-                    <Form.Group controlId="password" className="my-2">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Group>
-                            <Form.Control
-                                type="password"
-                                placeholder="Enter your password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            ></Form.Control>
+                        {/* Password field */}
+                        <Form.Group controlId="password" className="my-2">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Group>
+                                <Form.Control
+                                    type="password"
+                                    placeholder="Enter your password"
+                                    value={password}
+                                    onChange={(e) =>
+                                        setPassword(e.target.value)
+                                    }
+                                ></Form.Control>
+                            </Form.Group>
                         </Form.Group>
-                    </Form.Group>
 
-                    {/* Confirm Password field */}
-                    <Form.Group controlId="confirmPassword" className="my-2">
-                        <Form.Label>Confirm Password</Form.Label>
-                        <Form.Group>
-                            <Form.Control
-                                type="password"
-                                placeholder="Enter your password again"
-                                value={confirmPassword}
-                                onChange={(e) =>
-                                    setConfirmPassword(e.target.value)
-                                }
-                            ></Form.Control>
+                        {/* Confirm Password field */}
+                        <Form.Group
+                            controlId="confirmPassword"
+                            className="my-2"
+                        >
+                            <Form.Label>Confirm Password</Form.Label>
+                            <Form.Group>
+                                <Form.Control
+                                    type="password"
+                                    placeholder="Enter your password again"
+                                    value={confirmPassword}
+                                    onChange={(e) =>
+                                        setConfirmPassword(e.target.value)
+                                    }
+                                ></Form.Control>
+                            </Form.Group>
                         </Form.Group>
-                    </Form.Group>
 
-                    <Button type="submit" variant="primary" className="my-2">
-                        Update
-                    </Button>
-                </Form>
-            </Col>
+                        <Button
+                            type="submit"
+                            variant="primary"
+                            className="my-2"
+                        >
+                            Update
+                        </Button>
+                    </Form>
+                </Col>
 
-            {/* User orders */}
-            <Col md={9}>
-                <h2>My Orders</h2>
-                {isLoading ? (
-                    <Loader />
-                ) : error ? (
-                    <Message variant="danger">
-                        {error?.error?.message || error.error}
-                    </Message>
-                ) : (
-                    <Table striped hover responsive className="table-sm">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Date</th>
-                                <th>Total</th>
-                                <th>Paid</th>
-                                <th>Delivered</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {orders.map((order) => (
-                                <tr key={order._id}>
-                                    <td>{order._id}</td>
-                                    <td>{order.createdAt.substring(0, 10)}</td>
-                                    <td>${order.totalPrice}</td>
-                                    <td>
-                                        {order.isPaid ? (
-                                            order.paidAt.substring(0, 10)
-                                        ) : (
-                                            <FaTimes style={{ color: 'red' }} />
-                                        )}
-                                    </td>
-                                    <td>
-                                        {order.isDelivered ? (
-                                            order.deliveredAt
-                                        ) : (
-                                            <FaTimes style={{ color: 'red' }} />
-                                        )}
-                                    </td>
-                                    <td>
-                                        <LinkContainer
-                                            to={`/order/${order._id}`}
-                                        >
-                                            <Button
-                                                variant="light"
-                                                className="btn-sm"
-                                            >
-                                                Details
-                                            </Button>
-                                        </LinkContainer>
-                                    </td>
+                {/* User orders */}
+                <Col md={9}>
+                    <h2>My Orders</h2>
+                    {isLoading ? (
+                        <Loader />
+                    ) : error ? (
+                        <Message variant="danger">
+                            {error?.error?.message || error.error}
+                        </Message>
+                    ) : (
+                        <Table striped hover responsive className="table-sm">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Date</th>
+                                    <th>Total</th>
+                                    <th>Paid</th>
+                                    <th>Delivered</th>
+                                    <th></th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                )}
-            </Col>
-        </Row>
+                            </thead>
+                            <tbody>
+                                {orders.map((order) => (
+                                    <tr key={order._id}>
+                                        <td>{order._id}</td>
+                                        <td>
+                                            {order.createdAt.substring(0, 10)}
+                                        </td>
+                                        <td>${order.totalPrice}</td>
+                                        <td>
+                                            {order.isPaid ? (
+                                                order.paidAt.substring(0, 10)
+                                            ) : (
+                                                <FaTimes
+                                                    style={{ color: 'red' }}
+                                                />
+                                            )}
+                                        </td>
+                                        <td>
+                                            {order.isDelivered ? (
+                                                order.deliveredAt
+                                            ) : (
+                                                <FaTimes
+                                                    style={{ color: 'red' }}
+                                                />
+                                            )}
+                                        </td>
+                                        <td>
+                                            <LinkContainer
+                                                to={`/order/${order._id}`}
+                                            >
+                                                <Button
+                                                    variant="light"
+                                                    className="btn-sm"
+                                                >
+                                                    Details
+                                                </Button>
+                                            </LinkContainer>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    )}
+                </Col>
+            </Row>
+        </>
     );
 };
 
