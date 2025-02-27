@@ -1,9 +1,10 @@
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Pagination } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import Product from '../components/Product';
 import { useGetProductsQuery } from '../slices/productsApiSlice';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
+import Paginate from '../components/Paginate';
 const HomeScreen = () => {
     const { pageNumber } = useParams();
     const { data, isLoading, error } = useGetProductsQuery({ pageNumber });
@@ -26,6 +27,8 @@ const HomeScreen = () => {
                             </Col>
                         ))}
                     </Row>
+
+                    <Paginate page={data.page} pages={data.pages} />
                 </>
             )}
         </>
