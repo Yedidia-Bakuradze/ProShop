@@ -35,29 +35,30 @@ const OrderScreen = () => {
     const { userInfo } = useSelector((state) => state.auth);
 
     useEffect(() => {
-        if (!errorPaypal && !loadingPaypal && paypal.clientId) {
+        if (!errorPaypal && !loadingPaypal && paypal?.clientId) {
             const loadPaypalScript = async () => {
                 paypalDispatch({
                     type: 'resetOptions',
                     value: {
-                        clientId: paypal.clientId,
+                        'client-id': paypal.clientId,
                         currency: 'USD'
                     }
                 });
                 paypalDispatch({ type: 'setLoadingStatus', value: 'pending' });
             };
+
             if (order && !order.isPaid) {
                 if (!window.paypal) {
                     loadPaypalScript();
                 }
             }
         }
-    }, [order, paypal, loadingPaypal, errorPaypal, paypalDispatch]);
+    }, [errorPaypal, loadingPaypal, order, paypal, paypalDispatch]);
 
     function onApprove(data, actions) {
         return actions.order.capture().then(async function (details) {
             try {
-                await payOrder({ orderId, details });
+                await payOrder({ orderId, details }).unwrap();
                 refetch();
                 toast.success('Payment successful');
             } catch (err) {
@@ -71,7 +72,7 @@ const OrderScreen = () => {
     //     await payOrder({
     //         orderId,
     //         details: { payer: {} }
-    //     });
+    //     }).unwrap();
     //     refetch();
     //     toast.success('Payment successful');
     // }
@@ -85,7 +86,11 @@ const OrderScreen = () => {
             .create({
                 purchase_units: [
                     {
-                        amount: { value: order.totalPrice }
+                        amount: {
+                            value: Number(order.totalPrice).toFixed(2),
+                            currency_code: 'USD'
+                        },
+                        description: `Order ${order._id}`
                     }
                 ]
             })
