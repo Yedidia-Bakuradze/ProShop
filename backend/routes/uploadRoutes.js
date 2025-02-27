@@ -18,27 +18,34 @@ const storage = multer.diskStorage({
 });
 
 function checkFileType(file, cb) {
-    const allowedFileTypes = /jpg|jpeg|png/; //allow some formats only
+    const allowedFileTypes = /jpe?g|png|webp/; //allow some formats only
+    const mimetypes = /image\/jpe?g|image\/png|image\/webp/;
     const extname = allowedFileTypes.test(
         path.extname(file.originalname).toLocaleLowerCase()
     );
-    const mimetype = allowedFileTypes.test(file.mimetype);
+    const mimetype = mimetypes.test(file.mimetype);
 
     console.log(`This is mimetype: ${mimetype}`);
     //If tests approved
     if (extname && mimetype) {
         return cb(null, true);
     }
-    cb('Image Only!');
+    cb('Image Only!', false);
 }
 
-const upload = multer({ storage });
+const upload = multer({ storage, checkFileType });
+const uploadSingleImage = upload.single('image');
 
 //set endpoint for upload, name file's "fieldname" to image and do:
-router.post('/', upload.single('image'), (req, res) => {
-    res.send({
-        message: 'Image uploaded',
-        image: `/${req.file.path}`
+router.post('/', (req, res) => {
+    uploadSingleImage(req, res, function (err) {
+        if (err) {
+            res.status(400).send({ message: err.message });
+        }
+        res.send({
+            message: 'Image uploaded',
+            image: `/${req.file.path}`
+        });
     });
 });
 
